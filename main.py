@@ -96,4 +96,13 @@ def track_tournament(rounds, team_elo_ratings):
         print(f"{team}: Elo Rating = {elo_rating}")
 
 # Example usage
-teams = ["Team A", "Team B", "
+teams = ["Team A", "Team B", ""]
+
+elo_ratings = load_elo_ratings()
+rounds = load_rounds()
+
+if not rounds:
+    rounds = generate_round_robin(teams)
+
+track_tournament(rounds, elo_ratings)
+
