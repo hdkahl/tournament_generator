@@ -95,6 +95,37 @@ def track_tournament(rounds, team_elo_ratings):
     for team, elo_rating in team_elo_ratings.items():
         print(f"{team}: Elo Rating = {elo_rating}")
 
+
+
+
+def generate_round_robin2(teams):
+    num_teams = len(teams)
+    matches_per_round = num_teams // 2
+
+    # Create a list of all possible match pairs
+    match_pairs = list(itertools.combinations(teams, 2))
+
+    # Generate rounds
+    rounds = []
+    for round_num in range(num_teams):
+        round_matches = []
+
+        # Select matches for the current round
+        for _ in range(matches_per_round):
+            match = match_pairs.pop(0)
+            round_matches.append(match)
+
+        rounds.append(round_matches)
+
+        # Rotate the teams in the match pairs list
+        match_pairs.insert(1, match_pairs.pop())
+
+    save_rounds(rounds)
+    return rounds
+
+
+
+
 # Example usage
 teams = ["Team A", "Team B", ""]
 
