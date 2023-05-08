@@ -137,3 +137,53 @@ if not rounds:
 
 track_tournament(rounds, elo_ratings)
 
+
+
+
+
+import requests
+from dataclasses import dataclass, fields
+
+
+@dataclass
+class ApiResponse:
+    pass
+
+
+def generate_dataclass(schema):
+    class_name = schema.get('title', 'ApiResponse')
+    properties = schema.get('properties', {})
+    
+    attrs = {}
+    for name, prop in properties.items():
+        prop_type = prop.get('type')
+        if prop_type == 'array':
+            item_type = prop['items'].get('type', 'Any')
+            attr_type = f'List[{item_type}]'
+        else:
+            attr_type = prop_type.capitalize()
+        
+        attrs[name] = (attr_type, None)
+    
+    attrs['__annotations__'] = attrs.copy()
+    attrs['__module__'] = '__main__'
+    
+    return type(class_name, (ApiResponse,), attrs)
+
+
+def main():
+    openapi_url = 'https://api.example.com/openapi.json'  # Replace with your OpenAPI URL
+    
+    response = requests.get(openapi_url)
+    schema = response.json()['components']['schemas']['ApiResponse']
+    
+    ApiResponseClass = generate_dataclass(schema)
+    
+    # Print the generated dataclass
+    print(ApiResponseClass)
+
+
+if __name__ == '__main__':
+    main()
+
+
